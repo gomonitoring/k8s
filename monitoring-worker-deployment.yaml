@@ -19,8 +19,8 @@ spec:
         app: monitoring-worker
     spec:
       containers:
-        - name: api
-          image: registry.ghaf.cloud/tests/back/api:v0.0.5
+        - name: monitoring-worker
+          image: registry.ghaf.cloud/tests/back/api:v0.0.6
           env:
             - name: MAX_URL_COUNT
               value: '20'
