@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: gomon-service
+  namespace: tests
+  labels:
+    app: gomon
+    app.kubernetes.io/component: gomon
+    app.kubernetes.io/name: gomon
+    stage: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: gomon
+  clusterIP: 10.107.181.151
+  clusterIPs:
+    - 10.107.181.151
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+status:
+  loadBalancer: {}

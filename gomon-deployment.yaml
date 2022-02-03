@@ -1,0 +1,91 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: gomon
+  namespace: tests
+  generation: 12
+  labels:
+    app: gomon
+  annotations:
+    deployment.kubernetes.io/revision: '12'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gomon
+  template:
+    metadata:
+      labels:
+        app: gomon
+    spec:
+      containers:
+        - name: api
+          image: registry.ghaf.cloud/tests/back/api:v0.0.4
+          env:
+            - name: MAX_URL_COUNT
+              value: '20'
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: DB_HOST
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: DB_NAME
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: JWT_SECRET
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
+status:
+  observedGeneration: 12
+  replicas: 1
+  updatedReplicas: 1
+  readyReplicas: 1
+  availableReplicas: 1
+  conditions:
+    - type: Available
+      status: 'True'
+      lastUpdateTime: '2022-01-31T14:43:57Z'
+      lastTransitionTime: '2022-01-31T14:43:57Z'
+      reason: MinimumReplicasAvailable
+      message: Deployment has minimum availability.
+    - type: Progressing
+      status: 'True'
+      lastUpdateTime: '2022-01-31T18:05:35Z'
+      lastTransitionTime: '2022-01-22T11:06:29Z'
+      reason: NewReplicaSetAvailable
+      message: ReplicaSet "gomon-6cdf4cd9d4" has successfully progressed.
