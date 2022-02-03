@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: local-worker-service
+  namespace: tests
+  labels:
+    app: local-worker
+    app.kubernetes.io/component: local-worker
+    app.kubernetes.io/name: local-worker
+    stage: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: local-worker
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+status:
+  loadBalancer: {}

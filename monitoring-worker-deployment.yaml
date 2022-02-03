@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gomon
+  name: monitoring-worker
   namespace: tests
   generation: 12
   labels:
-    app: gomon
+    app: monitoring-worker
   annotations:
     deployment.kubernetes.io/revision: '12'
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gomon
+      app: monitoring-worker
   template:
     metadata:
       labels:
-        app: gomon
+        app: monitoring-worker
     spec:
       containers:
         - name: api
@@ -25,37 +25,11 @@ spec:
             - name: MAX_URL_COUNT
               value: '20'
             - name: FUNC
-              value: 'server'
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: DB_HOST
-            - name: DB_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: DB_NAME
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: DB_PORT
-            - name: DB_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: JWT_SECRET
+              value: 'monitoring_worker'
+            - name: MACHINERY_BROKER
+              value: redis://task-broker-service.tests.svc:6379
+            - name: MACHINERY_RESULTS_BACKEND
+              value: redis://task-broker-service.tests.svc:6379
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File

@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis-cache-service
+  namespace: tests
+  labels:
+    app: redis-cache
+    app.kubernetes.io/component: redis-cache
+    app.kubernetes.io/name: redis-cache
+    stage: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: redis-cache
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+status:
+  loadBalancer: {}

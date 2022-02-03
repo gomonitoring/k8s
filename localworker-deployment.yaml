@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gomon
+  name: local-worker
   namespace: tests
   generation: 12
   labels:
-    app: gomon
+    app: local-worker
   annotations:
     deployment.kubernetes.io/revision: '12'
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gomon
+      app: local-worker
   template:
     metadata:
       labels:
-        app: gomon
+        app: local-worker
     spec:
       containers:
         - name: api
@@ -25,7 +25,13 @@ spec:
             - name: MAX_URL_COUNT
               value: '20'
             - name: FUNC
-              value: 'server'
+              value: local_worker
+            - name: REDIS_HOST
+              value: redis-cache-service.tests.svc:6379
+            - name: MACHINERY_BROKER
+              value: redis://task-broker-service.tests.svc:6379 
+            - name: MACHINERY_RESULTS_BACKEND
+              value: redis://task-broker-service.tests.svc:6379
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
@@ -90,4 +96,4 @@ status:
       lastUpdateTime: '2022-01-31T18:05:35Z'
       lastTransitionTime: '2022-01-22T11:06:29Z'
       reason: NewReplicaSetAvailable
-      message: ReplicaSet "gomon-6cdf4cd9d4" has successfully progressed.
+      message: ReplicaSet "local-worker-6cdf4cd9d4" has successfully progressed.

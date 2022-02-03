@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: monitoring-worker-service
+  namespace: tests
+  labels:
+    app: monitoring-worker
+    app.kubernetes.io/component: monitoring-worker
+    app.kubernetes.io/name: monitoring-worker
+    stage: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: monitoring-worker
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+status:
+  loadBalancer: {}

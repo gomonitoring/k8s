@@ -1,0 +1,24 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: task-broker-service
+  namespace: tests
+  labels:
+    app: task-broker
+    app.kubernetes.io/component: task-broker
+    app.kubernetes.io/name: task-broker
+    stage: prod
+spec:
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  selector:
+    app: task-broker
+  type: ClusterIP
+  sessionAffinity: None
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+status:
+  loadBalancer: {}
